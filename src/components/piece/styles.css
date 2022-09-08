@@ -1,6 +1,8 @@
 .piece {
-    height: 80px;
-    width: 80px;
+    height: calc(100vmin / 4 - 6px);
+    max-height: 144px;
+    width: calc(100vmin / 4 - 6px);
+    max-width: 144px;
     background-color: #C2B3A3;
     margin: 3px;
     display: flex;
@@ -52,4 +54,61 @@
 
 .piece_2048 {
     background-color: #E7B723;
+}
+
+.piece.dark-theme {
+    background-color: #5E5E7F;
+}
+
+.piece_2.dark-theme {
+    background-color: #7982F2;
+}
+
+.piece_4.dark-theme {
+    background-color: #969FF3;
+}
+
+.piece_8.dark-theme {
+    background-color: #7982F2;
+    color: #2B2A5F;
+}
+
+.piece_16.dark-theme {
+    background-color: #6367F5;
+    color: #2B2A5F;
+}
+
+.piece_32.dark-theme {
+    background-color: #564DDE;
+    color: #2B2A5F;
+}
+
+.piece_64.dark-theme {
+    background-color: #583BF6;
+    color: #2B2A5F;
+}
+
+.piece_128.dark-theme {
+    background-color: #729EED;
+    color: #2B2A5F;
+}
+
+.piece_256.dark-theme {
+    background-color: #6163ED;
+    color: #2B2A5F;
+}
+
+.piece_512.dark-theme {
+    background-color: #5062ED;
+    color: #2B2A5F;
+}
+
+.piece_1024.dark-theme {
+    background-color: #3F3FED;
+    color: #2B2A5F;
+}
+
+.piece_2048.dark-theme {
+    background-color: #382EED;
+    color: #2B2A5F;
 }
