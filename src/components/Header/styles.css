@@ -1,0 +1,17 @@
+.header {
+    width: 100vw;
+    max-width: 600px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding-bottom: 1.2rem;
+    height: 8.125rem;
+}
+
+.title {
+    font-size: 3rem;
+}
+
+.title.dark-theme {
+    color: whitesmoke;
+}

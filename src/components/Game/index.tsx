@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { ThemeContext } from "../../theme/ThemeContext"
-import { useEvent } from "../../utils/event"
+import { useEvent } from "../../utils/keyDownEvent"
+import { handleSwipeDown, handleSwipeLeft, handleSwipeRight, handleSwipeUp } from "../../utils/movements"
 import Board from "../Board"
-import Button from "../Button"
+import GameOverMessage from "../GameOverMessage"
+import Header from "../Header"
 import './styles.css'
 
 const Game = () => {
@@ -15,51 +17,51 @@ const Game = () => {
     const [dummy, setDummy] = useState<number[]>([])
     const [gameOver, setGameOver] = useState(false)
 
-    const { theme, toggleTheme } = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext)
 
     const initialize = () => {
-        let newGrid = [...gameState];
-        addNumber(newGrid);
-        addNumber(newGrid);
-        setGameState(newGrid);
+        let newGrid = [...gameState]
+        newGrid = addNumber(newGrid)
+        newGrid = addNumber(newGrid)
+        setGameState(newGrid)
     }
 
     const resetGame = () => {
-        const emptyGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-        addNumber(emptyGrid)
-        addNumber(emptyGrid)
+        let emptyGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        emptyGrid = addNumber(emptyGrid)
+        emptyGrid = addNumber(emptyGrid)
         setGameState(emptyGrid)
         setGameOver(false)
     }
 
     const isGameOver = () => {
-        handleSwipeLeft(true);
+        setDummy(handleSwipeLeft(gameState))
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            return false;
+            return false
         }
 
-        handleSwipeDown(true);
+        setDummy(handleSwipeDown(gameState))
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            return false;
+            return false
         }
 
-        handleSwipeRight(true);
+        setDummy(handleSwipeRight(gameState))
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            return false;
+            return false
         }
 
-        handleSwipeUp(true);
+        setDummy(handleSwipeUp(gameState))
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            return false;
+            return false
         }
 
         return true
     }
 
-    const addNumber = (newGrid: number[]) => {
+    const addNumber = (currentGrid: number[]) => {
+        let newGrid = [...currentGrid]
         let added = false
-        let left_spaces: number[] = []
+        let left_spaces: number[] = [] // array with indexes of currentGrid's empty spaces
 
         newGrid.forEach((value, index) => {
             if (value === 0) {
@@ -71,7 +73,7 @@ const Game = () => {
             if (isGameOver()) {
                 setGameOver(true)
             }
-            return
+            return newGrid
         }
 
         while (!added) {
@@ -79,187 +81,29 @@ const Game = () => {
             newGrid[left_spaces[position]] = Math.random() > 0.5 ? 2 : 4
             added = true
         }
+        return newGrid
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
+        let newGrid = [...gameState]
         switch (event.keyCode) {
             case UP_ARROW:
-                handleSwipeUp()
+                newGrid = handleSwipeUp(gameState)
                 break;
             case DOWN_ARROW:
-                handleSwipeDown()
+                newGrid = handleSwipeDown(gameState)
                 break;
             case LEFT_ARROW:
-                handleSwipeLeft()
+                newGrid = handleSwipeLeft(gameState)
                 break;
             case RIGHT_ARROW:
-                handleSwipeRight()
+                newGrid = handleSwipeRight(gameState)
                 break;
             default:
                 break;
         }
-    }
-
-    const handleSwipeLeft = (isVerification = false) => {
-        let newArray = [...gameState]
-
-        for (let i = 0; i < 4; i++) {
-            let piece_index_1 = i * 4
-            let piece_index_2 = piece_index_1 + 1
-
-            while (piece_index_1 < (i + 1) * 4) {
-                if (piece_index_2 === (i + 1) * 4) {
-                    piece_index_2 = piece_index_1 + 1
-                    piece_index_1++
-                    continue
-                }
-
-                if (newArray[piece_index_2] === 0) {
-                    piece_index_2++
-                } else if (newArray[piece_index_1] === 0) {
-                    newArray[piece_index_1] = newArray[piece_index_2]
-                    newArray[piece_index_2] = 0
-                } else {
-                    if (newArray[piece_index_1] === newArray[piece_index_2]) {
-                        newArray[piece_index_1] *= 2
-                        newArray[piece_index_2] = 0
-                    } else {
-                        piece_index_1++
-                        piece_index_2 = piece_index_1 + 1
-                    }
-                }
-            }
-        }
-
-        if (isVerification) {
-            setDummy(newArray)
-            return
-        }
-
-        setGameState(newArray)
-        addNumber(newArray)
-    }
-
-    const handleSwipeRight = (isVerification = false) => {
-        let newArray = [...gameState]
-
-        for (let i = 0; i < 4; i++) {
-            let piece_index_1 = (i + 1) * 4 - 1
-            let piece_index_2 = piece_index_1 - 1
-
-            while (piece_index_2 > i * 4 - 1) {
-                if (piece_index_2 === -1) {
-                    piece_index_2 = piece_index_1 - 1
-                    piece_index_1--
-                    continue
-                }
-
-                if (newArray[piece_index_2] === 0) {
-                    piece_index_2--
-                } else if (newArray[piece_index_1] === 0) {
-                    newArray[piece_index_1] = newArray[piece_index_2]
-                    newArray[piece_index_2] = 0
-                } else {
-                    if (newArray[piece_index_1] === newArray[piece_index_2]) {
-                        newArray[piece_index_1] *= 2
-                        newArray[piece_index_2] = 0
-                    } else {
-                        piece_index_1--
-                        piece_index_2 = piece_index_1 - 1
-                    }
-                }
-            }
-        }
-
-        if (isVerification) {
-            console.table(newArray)
-            setDummy(newArray)
-            console.table(dummy)
-            return
-        }
-
-        setGameState(newArray)
-        addNumber(newArray)
-    }
-
-    const handleSwipeUp = (isVerification = false) => {
-        let newArray = [...gameState]
-
-        for (let i = 0; i < 4; i++) {
-            let piece_index_1 = i
-            let piece_index_2 = piece_index_1 + 4
-
-            while (piece_index_1 < (i + 1) * 4) {
-                if (piece_index_2 > 12 + i) {
-                    piece_index_1 += 4
-                    piece_index_2 = piece_index_1 + 4
-                    continue
-                }
-
-                if (newArray[piece_index_2] === 0) {
-                    piece_index_2 += 4
-                } else if (newArray[piece_index_1] === 0) {
-                    newArray[piece_index_1] = newArray[piece_index_2]
-                    newArray[piece_index_2] = 0
-                } else {
-                    if (newArray[piece_index_1] === newArray[piece_index_2]) {
-                        newArray[piece_index_1] *= 2
-                        newArray[piece_index_2] = 0
-                    } else {
-                        piece_index_1 += 4
-                        piece_index_2 = piece_index_1 + 4
-                    }
-                }
-            }
-        }
-
-        if (isVerification) {
-            setDummy(newArray)
-            return
-        }
-
-        setGameState(newArray)
-        addNumber(newArray)
-    }
-
-    const handleSwipeDown = (isVerification = false) => {
-        let newArray = [...gameState]
-
-        for (let i = 0; i < 4; i++) {
-            let piece_index_1 = 12 + i
-            let piece_index_2 = piece_index_1 - 4
-
-            while (piece_index_1 > i) {
-                if (piece_index_2 < i) {
-                    piece_index_1 -= 4
-                    piece_index_2 = piece_index_1 - 4
-                    continue
-                }
-
-                if (newArray[piece_index_2] === 0) {
-                    piece_index_2 -= 4
-                } else if (newArray[piece_index_1] === 0) {
-                    newArray[piece_index_1] = newArray[piece_index_2]
-                    newArray[piece_index_2] = 0
-                } else {
-                    if (newArray[piece_index_1] === newArray[piece_index_2]) {
-                        newArray[piece_index_1] *= 2
-                        newArray[piece_index_2] = 0
-                    } else {
-                        piece_index_1 -= 4
-                        piece_index_2 = piece_index_1 - 4
-                    }
-                }
-            }
-        }
-
-        if (isVerification) {
-            setDummy(newArray)
-            return
-        }
-
-        setGameState(newArray)
-        addNumber(newArray)
+        newGrid = addNumber(newGrid)
+        setGameState(newGrid)
     }
 
     useEffect(() => {
@@ -270,21 +114,9 @@ const Game = () => {
 
     return (
         <div className={`game ${theme}-theme`}>
-            <div className='header'>
-                <h1 className={`title ${theme}-theme`}>2048</h1>
-                <Button handleClick={toggleTheme}>
-                    Change theme!
-                </Button>
-            </div>
-            <>
-                {gameOver &&
-                    <div className='game-over_container'>
-                        <h2 className='game-over_message'>Game Over</h2>
-                        <Button handleClick={resetGame}>New Game</Button>
-                    </div>
-                }
-                <Board currentState={gameState} />
-            </>
+            <Header />
+            {gameOver && <GameOverMessage handleClick={resetGame} />}
+            <Board currentState={gameState} />
         </div>
     )
 }
