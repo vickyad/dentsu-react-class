@@ -1,5 +1,5 @@
 .board {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    max-width: 600px;
+    max-width: 500px;
 }

@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { ThemeContext } from '../../theme/ThemeContext'
+import { PieceProps } from './types'
 import './styles.css'
 
-interface PieceProps {
-    num: number
-    theme: string
-}
-
-const Piece: React.FC<PieceProps> = ({ num, theme }) => {
+const Piece: React.FC<PieceProps> = (props) => {
+    const { theme } = useContext(ThemeContext)
     return (
-        <div className={`piece piece_${num} ${theme}-theme`}>
-            {num}
+        <div className={`piece piece_${props.num} ${theme}-theme`}>
+            {props.num}
         </div>
     )
 }

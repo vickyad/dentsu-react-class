@@ -1,0 +1,50 @@
+.game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #FAF8EF;
+    position: relative;
+}
+
+.game.dark-theme {
+    background-color: #505375;
+}
+
+.header {
+    width: 100vw;
+    max-width: 600px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding-bottom: 1.2rem;
+    height: 8.125rem;
+}
+
+.title {
+    font-size: 3rem;
+}
+
+.title.dark-theme {
+    color: whitesmoke;
+}
+
+.game-over_container {
+    width: 100vmin;
+    max-width: 500px;
+    height: 100vmin;
+    max-height: 500px;
+    background-color: #f5f5f5b1;
+    position: absolute;
+    top: 9.325rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-over_message {
+    font-size: 2rem;
+}
